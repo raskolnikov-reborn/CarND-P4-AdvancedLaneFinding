@@ -1,20 +1,4 @@
-## Advanced Lane Finding
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
-
-
-In this project, your goal is to write a software pipeline to identify the lane boundaries in a video, but the main output or product we want you to create is a detailed writeup of the project.  Check out the [writeup template](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) for this project and use it as a starting point for creating your own writeup.  
-
-Creating a great writeup:
----
-A great writeup should include the rubric points as well as your description of how you addressed each point.  You should include a detailed description of the code used in each step (with line-number references and code snippets where necessary), and links to other supporting documents or external references.  You should include images in your writeup to demonstrate how your code works with examples.  
-
-All that said, please be concise!  We're not looking for you to write a book here, just a brief description of how you passed each rubric point, and references to the relevant code :). 
-
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup.
-
-The Project
----
-
+# CarND P4: Advanced Lane finding
 The goals / steps of this project are the following:
 
 * Compute the camera calibration matrix and distortion coefficients given a set of chessboard images.
@@ -26,10 +10,48 @@ The goals / steps of this project are the following:
 * Warp the detected lane boundaries back onto the original image.
 * Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
-The images for camera calibration are stored in the folder called `camera_cal`.  The images in `test_images` are for testing your pipeline on single frames.  If you want to extract more test images from the videos, you can simply use an image writing method like `cv2.imwrite()`, i.e., you can read the video in frame by frame as usual, and for frames you want to save for later you can write to an image file.  
+### 1. Loading the images
+A simple method to load the images is defined. This method is used to load both the calibration as well as the test images
 
-To help the reviewer examine your work, please save examples of the output from each stage of your pipeline in the folder called `ouput_images`, and include a description in your writeup for the project of what each image shows.    The video called `project_video.mp4` is the video your pipeline should work well on.  
+### 2. Calibrating the camera
+All the calibration images are loaded. The grid is a non conventional 9x6 grid.
+The Flowchart for Camera calibration is illustrated below.
 
-The `challenge_video.mp4` video is an extra (and optional) challenge for you if you want to test your pipeline under somewhat trickier conditions.  The `harder_challenge.mp4` video is another optional challenge and is brutal!
+![Calibration Pipeline](./writeup_helpers/Calibration.png "Calibration")
 
-If you're feeling ambitious (again, totally optional though), don't stop there!  We encourage you to go out and take video of your own, calibrate your camera and show us how you would implement this project from scratch!
+![Undistorted Image](./writeup_helpers/undistort.png "Undistort")
+
+### 3. Calculating the Perspective Transform
+The Inverse perspective transform is calculated using the four point method. An image is chosen deliberately with straight lanes so that the points are empirically tuned to get parallel lane lines and verify the IPM Visually.
+
+![Perspective Transform](./writeup_helpers/ipm.png "Perspective")
+
+### 4. Color space segmentation
+HLS and LAB spaces were used to reliably separate lane markings based on color.
+The Flowchart is presented below
+
+![Color Space Segmentation](./writeup_helpers/color_pipeline.png "Color Based Segmentation")
+
+### 5. Gradient based Segmentation
+A sobel filter with x gradient only was used. The gradient based segmentation is to be performed on the top view (perspective transformed ) images so only a magnitude gradient in the x direction is relevant to the problem.
+
+
+### 6. Combination of Masks
+The Masks are combined using a simple or combination. The underlying assumption is that either gradient or Color space segmentation should be able to pick up the lane markers.
+
+![Masks](./writeup_helpers/masks_new.png "Lane Mask")
+
+### 7. Detect and track lanes
+The lane mask created by the combination of the gradient and the color masks is used to extract lane points by using the sliding window based approach on the histogram. The frame is vertically divided into 12 parts. and a moving window approach as instructed in the project help materials.
+
+![Histogram](./writeup_helpers/histogram.png "Histogram")
+
+### 8. Test and Visualize the Lane Marking pipeline
+The Entire Pipeline as described above, is tested on all the test images for the purpose of testing and tuning
+![Pipeline](./writeup_helpers/lane_pipeline_1.png "Pipeline 1")
+![Pipeline](./writeup_helpers/lane_pipeline_2.png "Pipeline 2")
+
+### 9. Working with Video
+The Pipeline after proper testing and tuning was used to annotate the video. The Flowchart is presented below
+
+![Video Pipeline](./writeup_helpers/video_pipeline.png "Video Pipeline")
