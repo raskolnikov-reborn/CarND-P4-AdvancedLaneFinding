@@ -26,6 +26,7 @@ The Source Code is available in cells 3-5 of the Jupyter Notebook
 
 ### 3. Calculating the Perspective Transform
 The Inverse perspective transform is calculated using the four point method. An image is chosen deliberately with straight lanes so that the points are empirically tuned to get parallel lane lines and verify the IPM Visually.
+Top scaling and bottom scaling variables is chosen to build a trapezium as described in the code. The Trapezium should be inverse perspective transformed to a rectangle representing our ROI.
 
 ![Perspective Transform](./writeup_helpers/ipm.png "Perspective")
 
