@@ -48,11 +48,27 @@ The Masks are combined using a simple or combination. The underlying assumption 
 ![Masks](./writeup_helpers/masks_new.png "Lane Mask")
 
 ### 7. Detect and track lanes
-The lane mask created by the combination of the gradient and the color masks is used to extract lane points by using the sliding window based approach on the histogram. The frame is vertically divided into 12 parts. and a moving window approach as instructed in the project help materials.
+The lane mask created by the combination of the gradient and the color masks is used to extract lane points by using the sliding window based approach on the histogram. The frame is vertically divided into 12 parts. and a moving window approach as instructed in the project help materials. The Method for this is defined as lane_finder(binary_image, left, right)
+
+#### 7.1 Use Histogram to detect the lane points using peaks 
 
 ![Histogram](./writeup_helpers/histogram.png "Histogram")
 
-The Method for this is defined as lane_finder(binary_image, left, right)
+#### 7.2 Fit Polynomial
+2D Polynomial can be fit to both raw pixel value lane coordinates and real world scaled coordinates to get lane Equations
+The Methods for the above are defined as get_lane_polynomial and get_scaled_lane_polynomial
+
+#### 7.3 Generate new Xfits
+Based on the polynomial coefficents, regularized x points are calculated
+
+#### 7.4 Curvature Calculation
+Curvature is calculated using get_curvature and get_curvature_scaled methods.
+
+![Curvature](./writeup_helpers/curvature.png "Curvature Calculation")
+
+#### 7.5 Distance Calculation
+Distance is calculated from both left and right lanes. The sum of the distances should be close to 3.7m. This was verified as in the submitted implementation the distance from both left and right lanes was approximately 4.2 meters. Distance from center can be interpreted as the difference between the left and right distances.
+
 
 ### 8. Test and Visualize the Lane Marking pipeline
 The Entire Pipeline as described above, is tested on all the test images for the purpose of testing and tuning
