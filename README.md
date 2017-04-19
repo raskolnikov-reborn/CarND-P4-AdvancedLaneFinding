@@ -87,3 +87,20 @@ The method for this is defined as annotate_frame in the Jupyter Notebook
 
 ### 10. Example Image
 ![Example](./writeup_helpers/example.png "Examples")
+
+
+### 11. Discussion
+
+#### 11.1 Problems Faced: 
+* Sobel Parameters as well as combinations were hard to tune while applying the gradient filter in perspective view. To overcome this, I switched aroud the order of the pipeline elements to warp to top view first. Only X direction gradient needed to be calculated after the affine warp.
+* Color Space Selection: I had a hard time choosing color spaces and thresholds because of the two discolored road patches in particular. I surveyed the various color spaces and found a combination of LAB and HLS to work well.
+* Instability: Due to pipeline intermittent failures, I used to get a lot of instability. Introduction of the line class to retain history fixed most of it.
+
+#### 11.2 Future Work
+* Tracking can be improved with a input driven filter like KF, Bayes Tracker etc. If the Lateral velocity of the car is known, This will become a good input for the tracker prediction step.
+
+* Experimentation with Preprocessing steps such as denoising, blurring, sharpening, Histogram Equalization to make the input image more suited to the pipeline.
+
+* Tuning and testing on the Challenge Videos.
+
+
